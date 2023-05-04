@@ -160,12 +160,7 @@ int lab1_opdracht2_contrast_stretch() { // 3. Contrast aanpassen
 
     cout << "Druk op een toets om te stoppen." << endl;
 
-    while (1) {
-        histogram.update(); // Update het histogram
-        int key = waitKey(1); // Wacht 1 mSec tot toets ingedrukt is. 0 = altijd wachten.
-        if (key != -1) // Een toets is ingedrukt, dus stoppen
-            break;
-    }
+    waitKey(0);
 
     return 0;
 }

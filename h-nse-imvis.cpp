@@ -4,7 +4,9 @@
 #include "Histogram.h"
 #include "Mirror.h"
 #include "inverteer.h"
+#include "zoom.h"
 #include <iostream>
+
 
 using namespace cv;
 using namespace std;

@@ -7,5 +7,12 @@ using namespace std;
 
 class zoom
 {
+public:
+
+	zoom(Mat& src, Mat& dst);
+	void procces(void);
+private:
+	Mat src, dst;
+	int HEIGHT, WIDTH;
 };
 

@@ -86,7 +86,7 @@ int lab1_opdracht1a_beeld_spiegelen() { // 1. Spiegelen
     Vergeet de optie IMREAD_GRAYSCALE niet als je een grijswaardenplaatje inleest.
     Met IMREAD_GRAYSCALE krijg je 1 byte per pixel, als je het vergeet krijg je 3 bytes per pixel en dan zie je maar 1/3 van je bronplaatje terug!! */
 
-    src = imread("c://imvis//lab1//File1.pgm", IMREAD_GRAYSCALE);
+    src = imread("c://imvis//lab2//rijswijk.pgm", IMREAD_GRAYSCALE);
     namedWindow(source_window, WINDOW_AUTOSIZE); // Mag je weglaten, alleen imshow("naam",src) is voldoende.
     imshow(source_window, src); // Originele plaatje laten zien.
     int HEIGHT = src.rows;
@@ -173,6 +173,35 @@ int lab1_opdracht2_contrast_stretch() { // 3. Contrast aanpassen
 
 
 int lab2_opdracht2_zoomen() { // 4. Zoomen
+    Mat src, dst;
+
+    String source_window = "Originele plaatje";         // Mag je weglaten, alleen imshow("naam",src) is voldoende. Dit maakt het mooier.
+    String destination_window = "Verticaal gespiegeld";
+
+    /* Hieronder: plaatje inlezen met imread(). De paden moet er zo uitzien: "C://mijnMap//subMap//bestand.pgm"
+    Vergeet de optie IMREAD_GRAYSCALE niet als je een grijswaardenplaatje inleest.
+    Met IMREAD_GRAYSCALE krijg je 1 byte per pixel, als je het vergeet krijg je 3 bytes per pixel en dan zie je maar 1/3 van je bronplaatje terug!! */
+
+    src = imread("c://imvis//lab2//rijswijk.pgm", IMREAD_GRAYSCALE);
+    namedWindow(source_window, WINDOW_AUTOSIZE); // Mag je weglaten, alleen imshow("naam",src) is voldoende.
+    imshow(source_window, src); // Originele plaatje laten zien.
+    int HEIGHT = src.rows;
+    int WIDTH = src.cols;
+    int temp = 0;
+
+    dst = Mat::ones(HEIGHT, WIDTH, CV_8U) * 0;   // Maak een nieuw plaatje van hetzelfde type als src, gevuld met 1 * 0 (dus nullen, dus zwart)
+
+    Mirror spiegel(src, dst);
+    spiegel.process();
+
+    namedWindow(destination_window, WINDOW_AUTOSIZE); // Mag je weglaten, alleen imshow("naam",src) is voldoende.
+    imshow(destination_window, dst); // Bestemmingsplaatje laten zien.
+
+    // Plaatjes netjes positioneren (mag je weglaten, alleen imshow() is voldoende)
+    moveWindow(source_window, 0, 0); // Plaatje naar linksboven verplaatsen
+    moveWindow(destination_window, WIDTH, 0); // Plaatje rechts naast de andere plaatsen
+
+    waitKey(0); // Wachten tot een toets gedrukt wordt...
     return 0;
 }
 

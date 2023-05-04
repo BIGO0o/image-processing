@@ -14,10 +14,10 @@ void zoom::procces(void) {
     for (h = 0; h < HEIGHT; h++) {
         for (w = 0; w < WIDTH; w++) {
 
-            temp = src.at<uchar>(h, w);  // tijdelijk de pixel waarden opslaan
+            //temp = src.at<uchar>(h, w);  // tijdelijk de pixel waarden opslaan
 
             //dst.at<uchar>(h, WIDTH - w - 1) = temp; 
-            dst.at<uchar>(HEIGHT - h - 1, WIDTH - w - 1) = temp;
+            //dst.at<uchar>(HEIGHT - h - 1, WIDTH - w - 1) = temp;
         }
     }
 }

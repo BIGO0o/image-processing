@@ -5,6 +5,7 @@
 #include "Mirror.h"
 #include "inverteer.h"
 #include "zoom.h"
+#include "contrast.h"
 #include <iostream>
 
 
@@ -143,24 +144,44 @@ int lab1_opdracht1b_grijswaarden_inverteren() { // 2. Zwart en wit tinten invert
 }
 
 int lab1_opdracht2_contrast_stretch() { // 3. Contrast aanpassen
-    Mat src;
+    Mat src, dst;
     src = imread("c://imvis//lab1//Donker.pgm", IMREAD_GRAYSCALE);
-    if (src.empty()) {
-        cerr << "FOUT: De opgegeven afbeelding is leeg. Zorg ervoor dat de afbeelding correct is geladen." << endl;
-        return 1;
-    }
 
-    String destination_window = "Afbeelding";
-    Histogram histogram("Histogram src", src);
+    int HEIGHT = src.rows;
+    int WIDTH = src.cols;
+    int temp = 0;
+
+    dst = Mat::ones(HEIGHT, WIDTH, CV_8U) * 0;
+
+    contrast contrast(src, dst);
+    contrast.process();
+
+    string source_window = "orgineel plaatje";
+    String destination_window = "nieuwe plaatje";
+    Histogram histogram1("Histogram src", src);
+    Histogram histogram2("Histogram dst", dst);
 
     namedWindow(destination_window, WINDOW_AUTOSIZE);
-    imshow(destination_window, src);
+    namedWindow(source_window, WINDOW_AUTOSIZE);
+    imshow(destination_window, dst);
+    imshow(source_window, src);
     moveWindow(destination_window, 0, 0); // Verplaats de afbeelding naar linksboven
     moveWindow("Histogram src", 89, 513); // Schuif het histogram onder de afbeelding
+    moveWindow("Histogram dst", 100, 513); // Schuif het histogram onder de afbeelding
+
+
 
     cout << "Druk op een toets om te stoppen." << endl;
 
-    waitKey(0);
+    while (1) {
+        int key = waitKey(1);
+        histogram1.update(); // Update het histogram
+        histogram2.update();
+         // Wacht 1 mSec tot toets ingedrukt is. 0 = altijd wachten.
+        if (key == 27)
+            return 0;
+        // Een toets is ingedrukt, dus stoppen
+    }
 
     return 0;
 }
@@ -169,36 +190,45 @@ int lab1_opdracht2_contrast_stretch() { // 3. Contrast aanpassen
 
 int lab2_opdracht2_zoomen() { // 4. Zoomen
     Mat src, dst;
+    float zoomFactor = 4;
+    int xWaarde = 320, yWaarde = 240;
 
-    String source_window = "Originele plaatje";         // Mag je weglaten, alleen imshow("naam",src) is voldoende. Dit maakt het mooier.
-    String destination_window = "Verticaal gespiegeld";
+    cout << "zoomfactor: ";
+    cin >> zoomFactor;
+    if (zoomFactor > 1)
+    {
+        cout << endl << "x-coordinaat: ";
+        cin >> xWaarde;
+        cout << endl << "y-coordinaat: ";
+        cin >> yWaarde;
+    }
 
-    /* Hieronder: plaatje inlezen met imread(). De paden moet er zo uitzien: "C://mijnMap//subMap//bestand.pgm"
-    Vergeet de optie IMREAD_GRAYSCALE niet als je een grijswaardenplaatje inleest.
-    Met IMREAD_GRAYSCALE krijg je 1 byte per pixel, als je het vergeet krijg je 3 bytes per pixel en dan zie je maar 1/3 van je bronplaatje terug!! */
+    String source_window = "Originele plaatje";
+    String destination_window = "Zoom :0";
 
-    src = imread("c://imvis//lab2//rijswijk.pgm", IMREAD_GRAYSCALE);
-    namedWindow(source_window, WINDOW_AUTOSIZE); // Mag je weglaten, alleen imshow("naam",src) is voldoende.
-    imshow(source_window, src); // Originele plaatje laten zien.
+    src = imread("c://imvis//lab2//Rijswijk.pgm", IMREAD_GRAYSCALE);
+    namedWindow(source_window, WINDOW_AUTOSIZE);
+    imshow(source_window, src);
+
     int HEIGHT = src.rows;
     int WIDTH = src.cols;
     int temp = 0;
 
-    dst = Mat::ones(HEIGHT, WIDTH, CV_8U) * 0;   // Maak een nieuw plaatje van hetzelfde type als src, gevuld met 1 * 0 (dus nullen, dus zwart)
+    dst = Mat::ones(HEIGHT, WIDTH, CV_8U) * 0;
 
-    Mirror spiegel(src, dst);
-    spiegel.process();
+    Zoom zoom(src, dst);
+    zoom.process(zoomFactor, xWaarde, yWaarde);
 
-    namedWindow(destination_window, WINDOW_AUTOSIZE); // Mag je weglaten, alleen imshow("naam",src) is voldoende.
-    imshow(destination_window, dst); // Bestemmingsplaatje laten zien.
+    namedWindow(destination_window, WINDOW_AUTOSIZE);
+    imshow(destination_window, dst);
 
-    // Plaatjes netjes positioneren (mag je weglaten, alleen imshow() is voldoende)
-    moveWindow(source_window, 0, 0); // Plaatje naar linksboven verplaatsen
-    moveWindow(destination_window, WIDTH, 0); // Plaatje rechts naast de andere plaatsen
+    moveWindow(source_window, 0, 0);
+    moveWindow(destination_window, WIDTH, 0);
 
-    waitKey(0); // Wachten tot een toets gedrukt wordt...
+    int key = waitKey(0);
     return 0;
 }
+
 
 int lab2_opdracht2b_roteren() { // 5. Roteren
     return 0;
